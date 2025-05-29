@@ -1,47 +1,41 @@
 /**
- * Nome do arquivo: main.jsx
+ * Nome do arquivo: App.jsx
  * Data de criação: 29/05/2025
  * Autor: Jean Carlos
  * Matrícula: 01750191
  *
  * Descrição:
- * Componente principal da aplicação criado pelo template inicial do Vite + React.
- * Atualmente exibe os logotipos do Vite e do React, contador de cliques e links de documentação.
- * Será substituído posteriormente pelo dashboard de cartas do Pokémon TCG.
+ * Exibe as cartas salvas anteriormente no localStorage.
+ * Renderiza miniaturas no topo da página ou uma mensagem se não houver cartas.
  */
 
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [savedCards, setSavedCards] = useState([])
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('savedCards')) || []
+    setSavedCards(stored)
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="container mt-4">
+      <h2>Cartas Salvas</h2>
+      {savedCards.length === 0 ? (
+        <p>Nenhuma carta salva.</p>
+      ) : (
+        <div className="d-flex flex-wrap gap-3">
+          {savedCards.map(card => (
+            <img
+              key={card.id}
+              src={card.images.small}
+              alt={card.name}
+              style={{ width: 100 }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
-
-export default App
