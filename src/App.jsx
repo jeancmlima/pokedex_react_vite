@@ -11,7 +11,6 @@
  */
 
 import { useEffect, useState } from 'react'
-import { Card } from 'tcg-sdk'
 
 function App() {
   const [savedCards, setSavedCards] = useState([])
@@ -24,11 +23,13 @@ function App() {
     setSavedCards(stored)
   }, [])
 
-  // Buscar carta via api
+  // Buscar carta via API oficial
   const handleSearch = async () => {
     try {
-      const card = await Card.find(searchCode)
-      setCardResult(card)
+      const response = await fetch(`https://api.pokemontcg.io/v2/cards/${searchCode}`)
+      if (!response.ok) throw new Error('Carta não encontrada.')
+      const data = await response.json()
+      setCardResult(data.data)
     } catch (error) {
       alert('Carta não encontrada.')
     }
