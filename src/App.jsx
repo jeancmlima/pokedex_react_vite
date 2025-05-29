@@ -8,7 +8,7 @@
  * Componente principal da aplicação que exibe cartas salvas no localStorage,
  * permite buscar cartas por nome ou código usando a API Pokémon TCG,
  * exibir múltiplos resultados e salvar cartas visualizadas evitando duplicatas.
- * Inclui efeito visual de cartas deslizáveis com Swiper.js.
+ * Inclui efeito visual de cartas deslizáveis com Swiper.js e detalhamento em modal.
  */
 
 import { useEffect, useState } from 'react'
@@ -22,6 +22,7 @@ function App() {
   const [savedCards, setSavedCards] = useState([])
   const [searchCode, setSearchCode] = useState('')
   const [cardResult, setCardResult] = useState([])
+  const [selectedCard, setSelectedCard] = useState(null)
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('savedCards')) || []
@@ -52,8 +53,6 @@ function App() {
 
   return (
     <div className="container mt-5">
-
-      {/* Cartas Salvas */}
       <h2 className="mb-4 text-center">Cartas Salvas</h2>
       {savedCards.length === 0 ? (
         <p className="text-muted text-center">Nenhuma carta salva.</p>
@@ -76,7 +75,6 @@ function App() {
         </div>
       )}
 
-      {/* Busca */}
       <div className="mt-5">
         <h3>Buscar Carta</h3>
         <input
@@ -91,7 +89,6 @@ function App() {
         </button>
       </div>
 
-      {/* Resultado com Swiper */}
       {cardResult.length > 1 && (
         <div className="mt-5 d-flex justify-content-center">
           <Swiper
@@ -101,8 +98,8 @@ function App() {
             className="mySwiper"
           >
             {cardResult.map(card => (
-              <SwiperSlide key={card.id} onClick={() => setCardResult([card])}>
-                <div className="swiper-card">
+              <SwiperSlide key={card.id}>
+                <div className="swiper-card" onClick={() => setSelectedCard(card)}>
                   <img src={card.images.large} alt={card.name} className="img-fluid" />
                 </div>
               </SwiperSlide>
@@ -111,46 +108,48 @@ function App() {
         </div>
       )}
 
-      {/* Detalhes da Carta */}
-      {cardResult.length === 1 && (
-        <div className="card mt-5 p-4 shadow-lg">
-          <div className="row g-4">
-            <div className="col-md-4 text-center">
-              <img src={cardResult[0].images.large} className="img-fluid rounded" alt={cardResult[0].name} />
-              <button
-                className="btn btn-success mt-3"
-                disabled={savedCards.some(c => c.id === cardResult[0].id)}
-                onClick={() => handleSaveCard(cardResult[0])}
-              >
-                {savedCards.some(c => c.id === cardResult[0].id)
-                  ? 'Carta já salva'
-                  : 'Salvar Carta'}
-              </button>
-            </div>
-            <div className="col-md-8 text-start">
-              <h3>{cardResult[0].name}</h3>
-              <p><strong>Supertype:</strong> {cardResult[0].supertype}</p>
-              <p><strong>Subtypes:</strong> {cardResult[0].subtypes?.join(', ')}</p>
-              <p><strong>HP:</strong> {cardResult[0].hp}</p>
-              <p><strong>Tipos:</strong> {cardResult[0].types?.join(', ')}</p>
-              <p><strong>Evolui para:</strong> {cardResult[0].evolvesTo?.join(', ')}</p>
-              <p><strong>Regras:</strong> {cardResult[0].rules?.join(' / ')}</p>
-
-              <h5>Ataques:</h5>
-              <ul>
-                {cardResult[0].attacks?.map((atk, i) => (
-                  <li key={i}>
-                    <strong>{atk.name}</strong>: {atk.text} ({atk.damage})
-                  </li>
-                ))}
-              </ul>
-
-              <p><strong>Fraquezas:</strong> {cardResult[0].weaknesses?.map(w => `${w.type} (${w.value})`).join(', ')}</p>
-              <p><strong>Recuo:</strong> {cardResult[0].retreatCost?.join(', ')}</p>
-              <p><strong>Conjunto:</strong> {cardResult[0].set.name} - {cardResult[0].set.releaseDate}</p>
-              <p><strong>Nº:</strong> {cardResult[0].number} - <strong>Raridade:</strong> {cardResult[0].rarity}</p>
-              <p><strong>Artista:</strong> {cardResult[0].artist}</p>
-              <p><strong>Preço médio:</strong> R$ {cardResult[0].tcgplayer?.prices?.holofoil?.market?.toFixed(2) || 'N/A'}</p>
+      {selectedCard && (
+        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content p-4">
+              <div className="modal-header">
+                <h5 className="modal-title">{selectedCard.name}</h5>
+                <button type="button" className="btn-close" onClick={() => setSelectedCard(null)}></button>
+              </div>
+              <div className="modal-body">
+                <div className="row g-4">
+                  <div className="col-md-4 text-center">
+                    <img src={selectedCard.images.large} className="img-fluid rounded" alt={selectedCard.name} />
+                    <button
+                      className="btn btn-success mt-3"
+                      disabled={savedCards.some(c => c.id === selectedCard.id)}
+                      onClick={() => {
+                        handleSaveCard(selectedCard)
+                        setSelectedCard(null)
+                      }}
+                    >
+                      {savedCards.some(c => c.id === selectedCard.id) ? 'Carta já salva' : 'Salvar Carta'}
+                    </button>
+                  </div>
+                  <div className="col-md-8 text-start">
+                    <p><strong>HP:</strong> {selectedCard.hp}</p>
+                    <p><strong>Tipos:</strong> {selectedCard.types?.join(', ')}</p>
+                    <p><strong>Subtipos:</strong> {selectedCard.subtypes?.join(', ')}</p>
+                    <p><strong>Regras:</strong> {selectedCard.rules?.join(' / ')}</p>
+                    <h5>Ataques:</h5>
+                    <ul>
+                      {selectedCard.attacks?.map((atk, i) => (
+                        <li key={i}><strong>{atk.name}</strong>: {atk.text} ({atk.damage})</li>
+                      ))}
+                    </ul>
+                    <p><strong>Fraquezas:</strong> {selectedCard.weaknesses?.map(w => `${w.type} (${w.value})`).join(', ')}</p>
+                    <p><strong>Conjunto:</strong> {selectedCard.set.name} - {selectedCard.set.releaseDate}</p>
+                    <p><strong>Raridade:</strong> {selectedCard.rarity}</p>
+                    <p><strong>Artista:</strong> {selectedCard.artist}</p>
+                    <p><strong>Preço médio:</strong> R$ {selectedCard.tcgplayer?.prices?.holofoil?.market?.toFixed(2) || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
