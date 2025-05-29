@@ -5,8 +5,9 @@
  * Matrícula: 01750191
  *
  * Descrição:
- * Componente principal da aplicação que exibe cartas salvas no localStorage
- * e permite buscar cartas por código usando a API Pokémon TCG.
+ * Componente principal da aplicação que exibe cartas salvas no localStorage,
+ * permite buscar cartas por código usando a API Pokémon TCG
+ * e salvar cartas visualizadas evitando duplicatas.
  */
 
 import { useEffect, useState } from 'react'
@@ -31,6 +32,13 @@ function App() {
     } catch (error) {
       alert('Carta não encontrada.')
     }
+  }
+
+  // Salvar carta no localStorage
+  const handleSaveCard = () => {
+    const updated = [...savedCards, cardResult]
+    localStorage.setItem('savedCards', JSON.stringify(updated))
+    setSavedCards(updated)
   }
 
   return (
@@ -95,9 +103,19 @@ function App() {
           <p><strong>Nº:</strong> {cardResult.number} - <strong>Raridade:</strong> {cardResult.rarity}</p>
           <p><strong>Artista:</strong> {cardResult.artist}</p>
           <p><strong>Preço médio:</strong> R$ {cardResult.tcgplayer?.prices?.holofoil?.market?.toFixed(2) || 'N/A'}</p>
+
+          {/* Botão Salvar Carta */}
+          <button
+            className="btn btn-success mt-3"
+            disabled={savedCards.some(c => c.id === cardResult.id)}
+            onClick={handleSaveCard}
+          >
+            {savedCards.some(c => c.id === cardResult.id)
+              ? 'Carta já salva'
+              : 'Salvar Carta'}
+          </button>
         </div>
       )}
-
     </div>
   )
 }
