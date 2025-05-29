@@ -1,0 +1,33 @@
+# Nome do arquivo: .gitignore
+# Data de criação: 29/05/2025
+# Autor: Jean Carlos
+# Matrícula: 01750191
+#
+# Descrição:
+# Arquivos e pastas ignorados pelo Git no projeto React com Vite.
+# Inclui dependências, cache do Vite, builds e configurações de sistema/editor.
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
