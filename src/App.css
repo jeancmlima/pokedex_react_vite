@@ -1,15 +1,4 @@
-/**
- * Nome do arquivo: main.jsx
- * Data de criação: 29/05/2025
- * Autor: Jean Carlos
- * Matrícula: 01750191
- *
- * Descrição:
- * Estilos base da aplicação React criada com Vite.
- * Inclui configurações de layout geral, animação de logo,
- * responsividade e estilos de componentes como cards e logotipos.
- */
-
+/* Layout geral */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -17,6 +6,7 @@
   text-align: center;
 }
 
+/* Logos */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -30,6 +20,7 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Animação para logo girando */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -38,17 +29,97 @@
     transform: rotate(360deg);
   }
 }
-
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
+/* Cartões padrão */
 .card {
+  background: #fff;
+  border: none;
   padding: 2em;
+  transition: box-shadow 0.3s ease;
+  border-radius: 12px;
 }
 
+/* Container de cartas salvas */
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Estilo individual da carta com efeito 3D */
+.pokemon-card {
+  width: 100%;
+  max-width: 160px;
+  perspective: 1000px;
+}
+.pokemon-card img {
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+.pokemon-card img:hover {
+  transform: rotateY(8deg) rotateX(4deg) scale(1.05);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+
+/* Para imagem dentro do card com hover */
+.card-img-top {
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+.card-img-top:hover {
+  transform: scale(1.03);
+}
+
+/*Efeito de Baralho das Cartas*/
+.mySwiper {
+  width: 300px;
+  height: 440px;
+  margin-bottom: 2rem;
+}
+
+.swiper-card {
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.swiper-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  transition: none;
+}
+
+/* Texto auxiliar */
 .read-the-docs {
   color: #888;
+}
+
+/* Responsividade adicional */
+@media (max-width: 768px) {
+  .pokemon-card {
+    max-width: 48%;
+  }
+}
+@media (max-width: 480px) {
+  .pokemon-card {
+    max-width: 100%;
+  }
 }

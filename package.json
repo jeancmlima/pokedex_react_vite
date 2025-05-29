@@ -13,6 +13,7 @@
     "bootstrap": "^5.3.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "swiper": "^11.2.8",
     "tcg-sdk": "^1.0.0"
   },
   "devDependencies": {
