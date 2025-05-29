@@ -68,6 +68,36 @@ function App() {
         </button>
       </div>
 
+      {/* Detalhes da Carta */}
+      {cardResult && (
+        <div className="card mt-4 p-3 text-start">
+          <img src={cardResult.images.large} className="img-fluid mb-3" alt={cardResult.name} />
+          <h3>{cardResult.name}</h3>
+          <p><strong>Supertype:</strong> {cardResult.supertype}</p>
+          <p><strong>Subtypes:</strong> {cardResult.subtypes?.join(', ')}</p>
+          <p><strong>HP:</strong> {cardResult.hp}</p>
+          <p><strong>Tipos:</strong> {cardResult.types?.join(', ')}</p>
+          <p><strong>Evolui para:</strong> {cardResult.evolvesTo?.join(', ')}</p>
+          <p><strong>Regras:</strong> {cardResult.rules?.join(' / ')}</p>
+
+          <h5>Ataques:</h5>
+          <ul>
+            {cardResult.attacks?.map((atk, i) => (
+              <li key={i}>
+                <strong>{atk.name}</strong>: {atk.text} ({atk.damage})
+              </li>
+            ))}
+          </ul>
+
+          <p><strong>Fraquezas:</strong> {cardResult.weaknesses?.map(w => `${w.type} (${w.value})`).join(', ')}</p>
+          <p><strong>Recuo:</strong> {cardResult.retreatCost?.join(', ')}</p>
+          <p><strong>Conjunto:</strong> {cardResult.set.name} - {cardResult.set.releaseDate}</p>
+          <p><strong>Nº:</strong> {cardResult.number} - <strong>Raridade:</strong> {cardResult.rarity}</p>
+          <p><strong>Artista:</strong> {cardResult.artist}</p>
+          <p><strong>Preço médio:</strong> R$ {cardResult.tcgplayer?.prices?.holofoil?.market?.toFixed(2) || 'N/A'}</p>
+        </div>
+      )}
+
     </div>
   )
 }
