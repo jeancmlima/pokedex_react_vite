@@ -39,7 +39,7 @@ O sistema permite:
 git clone <url-do-repositorio>
 
 # Acesse a pasta do projeto
-cd sua-pasta
+cd pokedex_react_vite
 
 # Instale as dependências
 npm install
